@@ -14,10 +14,10 @@ function genprod(product) {
     if(product.tag){
         product.tag = capitalization(product.tag); //capitalize cái tag cho đẹp
     }
-    let product.short_desc = capitalization(product.short_desc); //capitalize chữ cái đầu tiên trong phần giới thiệu sơ về product
-    let product.name = capitalization(product.name); //capitalize chữ cái đầu của tên product
-    let product.unit_price = capitalization(product.unit_price); //capitalize chữ cái đầu của unit of currency (Usd, Vnd,...); theo design trên web Furniro thì nó sẽ là Rp
-    let product.price = pformat.format(product.price); //đổi cho đúng format display tiền tệ trên Furniro
+    product.short_desc = capitalization(product.short_desc); //capitalize chữ cái đầu tiên trong phần giới thiệu sơ về product
+    product.name = capitalization(product.name); //capitalize chữ cái đầu của tên product
+    product.unit_price = capitalization(product.unit_price); //capitalize chữ cái đầu của unit of currency (Usd, Vnd,...); theo design trên web Furniro thì nó sẽ là Rp
+    product.price = pformat.format(product.price); //đổi cho đúng format display tiền tệ trên Furniro
 
     const markup = `
     <div class="product-container" id="${product.name}"> 
