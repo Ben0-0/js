@@ -40,3 +40,29 @@ function genprod(product) {
     const section_02 = document.getElementById("section-02"); 
     section_02.insertAdjacentHTML("afterbegin",markup) //đoạn này có nhiều cách, element.innerHTML là 1 cách nma ko dùng vì nó sẽ overwrite content của cái element đó nên ko hiệu quả lắm; node.appendChild cũng được nma sử dụng element.insertAdjacentHTML vì nó có thể chọn chỗ insert vào còn appendChild là chỉ insert vào cuối list child của thg parent thôi
 }
+
+// Lay product
+// luu vo session storage
+// Chua co thi lay tren mang xuong (link xuong)
+// Co roi thi lay tu storage ra
+let fetched = false;
+let product = null;
+async function getProduct(){
+    if (fetched == true){
+        var sth = JSON.parse(sessionStorage.getItem("products"));
+        return sth;
+    }
+    product = await fetch("https://dummyjson.com/products");
+    product = await product.json();
+    product = product.products;
+    console.log(product);
+    var b = JSON.stringify(product);
+    sessionStorage.setItem("products",b);
+    return product;
+}
+getProduct();
+// var sth = sessionStorage.getItem("products");
+// const products = JSON.parse(sth);
+
+
+console.log(product);
