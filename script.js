@@ -1,7 +1,12 @@
-let pformat = new Intl.NumberFormat('de-DE', { style: 'currency', minimumSignificantDigits : 2 }); //để format tiền tệ, vd: pformat.format(2500) sẽ output ra 2.500,00 (I think so?)
+let pformat = new Intl.NumberFormat('de-DE', { minimumSignificantDigits : 2 }); //để format tiền tệ, vd: pformat.format(2500) sẽ output ra 2.500,00 (I think so?)
 
 function capitalization(string) { //viết hoa chữ cái đầu tiên của string
     return string.charAt(0).toUpperCase() + string.slice(1); //trả về string đó nhưng viết hoa chữ cái đầu tiên. ví dụ: capitalization(zxlckvn) thì sẽ trả về: kí tự đầu tiên của string(kí tự số 0 là z).toUpperCase sẽ biến nó thành Z, khi này string.slice(1) sẽ trả lại string ban đầu nhưng từ kí tự 1 trở đi, tức là trả xlckvn rồi cộng 2 cái lại sẽ ra Zxlckvn.
+}
+
+const truncatePrice = (price, k) => { //biến số có dạng abcd -> ab00 (với k=2); hay với k=3 thì abcd -> a000
+    const factor = Math.pow(10, Math.abs(price).toString().length - k); 
+    return Math.floor(price / factor) * factor; 
 }
 
 function genprod(product) {
@@ -10,6 +15,9 @@ function genprod(product) {
     }
     if(product.old_price){
         product.old_price = pformat.format(product.old_price); //same as below (line 17)
+    }
+    if((!('old_price' in product)) && (product.discount !== 0)){
+        product.old_price = pformat.format(truncatePrice(Math.floor((product.price)/(1-(product.discount)/(100))),2));
     }
     if(product.tag){
         product.tag = capitalization(product.tag); //capitalize cái tag cho đẹp
@@ -23,7 +31,7 @@ function genprod(product) {
     <div class="product-container" id="${product.name}"> 
         <img class="product-image" src="${product.image}" alt="${product.name}">
         <p class="product-discount">${product.discount ? `-${product.discount}%` : ""}</p>
-        <p class="product-tag">${product.tag ? product.tag : ""}</p>
+        <p class="product-tag">${product.tag ? `${product.tag}` : ""}</p>
 
         <h3 class="product-name">${product.name}</h3>
         <p class="product-desc">${product.short_desc}</p>
@@ -38,31 +46,19 @@ function genprod(product) {
     </div>
 `;
     const section_02 = document.getElementById("section-02"); 
-    section_02.insertAdjacentHTML("afterbegin",markup) //đoạn này có nhiều cách, element.innerHTML là 1 cách nma ko dùng vì nó sẽ overwrite content của cái element đó nên ko hiệu quả lắm; node.appendChild cũng được nma sử dụng element.insertAdjacentHTML vì nó có thể chọn chỗ insert vào còn appendChild là chỉ insert vào cuối list child của thg parent thôi
+    section_02.insertAdjacentHTML("beforeend", markup) //đoạn này có nhiều cách, element.innerHTML là 1 cách nma ko dùng vì nó sẽ overwrite content của cái element đó nên ko hiệu quả lắm; node.appendChild cũng được nma sử dụng element.insertAdjacentHTML vì nó có thể chọn chỗ insert vào còn appendChild là chỉ insert vào cuối list child của thg parent thôi
 }
 
-// Lay product
-// luu vo session storage
-// Chua co thi lay tren mang xuong (link xuong)
-// Co roi thi lay tu storage ra
-let fetched = false;
-let product = null;
-async function getProduct(){
-    if (fetched == true){
-        var sth = JSON.parse(sessionStorage.getItem("products"));
-        return sth;
-    }
-    product = await fetch("https://dummyjson.com/products");
-    product = await product.json();
-    product = product.products;
-    console.log(product);
-    var b = JSON.stringify(product);
-    sessionStorage.setItem("products",b);
-    return product;
+async function loadprod() {
+    const resp = await fetch("https://dummyapi-0uzr.onrender.com/products"); //fetch trả về cái promise mà sẽ resolve với object resp
+    const prod = await resp.json(); //lấy dữ liệu từ resp (đang là object) theo định dạng JavaScript Object Notation  
+
+    const container = document.getElementById("section-02"); 
+
+    prod.forEach((product) => { //loop forEach = cho mỗi product trong prod
+        const disprodhtml = genprod(product); //đặt biến disprodhtml (display-product-html) 
+        container.insertAdjacentHTML("beforeend",disprodhtml);
+    });
 }
-getProduct();
-// var sth = sessionStorage.getItem("products");
-// const products = JSON.parse(sth);
 
-
-console.log(product);
+loadprod();
