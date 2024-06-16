@@ -45,8 +45,7 @@ function genprod(product) {
         </div>
     </div>
 `;
-    const section_02 = document.getElementById("section-02"); 
-    section_02.insertAdjacentHTML("beforeend", markup) //đoạn này có nhiều cách, element.innerHTML là 1 cách nma ko dùng vì nó sẽ overwrite content của cái element đó nên ko hiệu quả lắm; node.appendChild cũng được nma sử dụng element.insertAdjacentHTML vì nó có thể chọn chỗ insert vào còn appendChild là chỉ insert vào cuối list child của thg parent thôi
+    return markup;
 }
 
 async function loadprod() {
