@@ -43,6 +43,7 @@ function genprod(product) {
             <a href=""><span class="material-symbols-outlined">sync_alt</span>Compare</a>
             <a href=""><span class="material-symbols-outlined">favorite</span>Like</a>
         </div>
+        <br></br>
     </div>
 `;
     return markup;
