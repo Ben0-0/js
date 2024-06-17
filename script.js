@@ -51,10 +51,10 @@ function genprod(product) {
 
 async function loadprod() {
     const resp = await fetch("https://dummyapi-0uzr.onrender.com/products"); //fetch trả về cái promise mà sẽ resolve với object resp
-    const prod = await resp.json(); //lấy dữ liệu từ resp (đang là object) theo định dạng JavaScript Object Notation  
+    let prod = await resp.json(); //lấy dữ liệu từ resp (đang là object) theo định dạng JavaScript Object Notation  
 
     const container = document.getElementById("section-02"); 
-
+    prod = prod.product_list;
     prod.forEach((product) => { //loop forEach = cho mỗi product trong prod
         const disprodhtml = genprod(product); //đặt biến disprodhtml (display-product-html) 
         container.insertAdjacentHTML("beforeend",disprodhtml);
